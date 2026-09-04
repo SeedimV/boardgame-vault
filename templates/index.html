@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Board Game Vault</title>
+</head>
+
+<body>
+  {% if session.username %}
+  <p>
+    You are logged in as {{session.username}}
+  </p>
+  {% endif %}
+
+  <p>
+    <a href="/login">Log in</a>
+    <a href="/register">Register</a>
+    <a href="/logout">Log out</a>
+  </p>
+</body>
+
+</html>
