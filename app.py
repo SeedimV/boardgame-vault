@@ -12,7 +12,13 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    all_games = games.get_games()
+    return render_template("index.html", games=all_games)
+
+@app.route("/game/<int:game_id>")
+def show_game(game_id):
+    game = games.get_game(game_id)
+    return render_template("show_game.html", game=game)
 
 @app.route("/new_game")
 def new_game():

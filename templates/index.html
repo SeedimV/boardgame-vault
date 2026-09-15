@@ -14,6 +14,11 @@
   <p>
     <a href="/logout">Log out</a>
   </p>
+
+  <p>
+    <a href="/new_game">Add new game</a>
+  </p>
+
   {% else %}
   <p>
     <a href="/login">Log in</a>
@@ -21,9 +26,13 @@
   </p>
   {% endif %}
 
-  <p>
-    <a href="/new_game">Add new game</a>
-  </p>
+  <h2>Games</h2>
+
+  <ul>
+    {% for game in games %}
+    <li><a href="/game/{{ game.id }}">{{ game.title }}</a></li>
+    {% endfor %}
+  </ul>
   
 </body>
 
