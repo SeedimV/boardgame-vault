@@ -8,15 +8,23 @@
 <body>
   {% if session.username %}
   <p>
-    You are logged in as {{session.username}}
+    You are logged in as {{session.username}} with an id {{ session.user_id }}.
+  </p>
+
+  <p>
+    <a href="/logout">Log out</a>
+  </p>
+  {% else %}
+  <p>
+    <a href="/login">Log in</a>
+    <a href="/register">Register</a>
   </p>
   {% endif %}
 
   <p>
-    <a href="/login">Log in</a>
-    <a href="/register">Register</a>
-    <a href="/logout">Log out</a>
+    <a href="/new_game">Add new game</a>
   </p>
+  
 </body>
 
 </html>

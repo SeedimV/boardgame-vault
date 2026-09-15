@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>New Game | Board Game Vault</title>
+</head>
+
+<body>
+  <h1>Add New Game</h1>
+
+  <form action="/create_game" method="post">
+    <p>
+      Title: <br />
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Description: <br />
+      <textarea name="description" rows="8" cols="60"></textarea>
+    </p>
+    <p>
+      Year: <br />
+      <input type="number" name="year" />
+    </p>
+    <p>
+      Minimum player amount <br />
+      <input type="number" name="min_player_count" />
+    </p>
+    <p>
+      Maximum player amount <br />
+      <input type="number" name="max_player_count" />
+    </p>
+    <p>
+      Average play time (minutes): <br />
+      <input type="number" name="playtime" />
+    </p>
+    <input type="submit" value="Add new game" />
+  </form>
+</body>
+
+</html>
