@@ -12,3 +12,19 @@ Board Game Vault is a web application for board game enthusiasts to catalog game
  * **Reviews & Ratings:** Users can write a review and give a numerical rating (1–5) for any board game.
  * **Search & Filter:** Users can search for games by title and filter games based on classifications.
  * **User Profiles & Statistics:** Users have profile pages displaying their added games, written reviews, and statistics (such as total games added and total ratings given).
+
+## Application Installation
+Install `Flask`:
+```sh
+$ pip install flask
+```
+
+Create the database tables:
+```sh
+$ sqlite3 database.db < schema.sql
+```
+
+Run the application:
+```sh
+$ flask run
+```
