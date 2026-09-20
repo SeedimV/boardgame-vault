@@ -65,6 +65,21 @@ def update_game():
 
     return redirect(f"/game/{game_id}")
 
+@app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
+def remove_game(game_id):
+    game = games.get_game(game_id)
+    if session.get("user_id") != game["user_id"]:
+        return "ERROR: Unauthorized", 403
+
+    if request.method == "GET":
+        return render_template("remove_game.html", game=game)
+
+    if "remove" in request.form:
+        games.remove_game(game_id)
+        return redirect("/")
+    else:
+        return redirect(f"/game/{game_id}")
+
 @app.route("/register")
 def register():
     return render_template("register.html")

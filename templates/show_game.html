@@ -11,6 +11,7 @@
   {% if session.user_id == game.user_id %}
   <p>
     <a href="/edit_game/{{ game.id }}">Edit</a>
+    <a href="/remove_game/{{ game.id }}">Delete</a>
   </p>
   {% endif %}
   <p>
