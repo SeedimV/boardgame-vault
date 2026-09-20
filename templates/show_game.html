@@ -7,6 +7,12 @@
 
 <body>
   <h1>{{ game.title }}</h1>
+
+  {% if session.user_id == game.user_id %}
+  <p>
+    <a href="/edit_game/{{ game.id }}">Edit</a>
+  </p>
+  {% endif %}
   <p>
     {{ game.description }}
   </p>
