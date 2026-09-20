@@ -15,6 +15,16 @@ def index():
     all_games = games.get_games()
     return render_template("index.html", games=all_games)
 
+@app.route("/find_game")
+def find_game():
+    query = request.args.get("query")
+    if query:
+        results = games.find_games(query)
+    else:
+        query = ""
+        results = []
+    return render_template("find_game.html", query=query, results=results)
+
 @app.route("/game/<int:game_id>")
 def show_game(game_id):
     game = games.get_game(game_id)
