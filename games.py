@@ -34,11 +34,11 @@ class GameData:
         return all([
             self.title and len(self.title) <= 50,
             self.description and len(self.description) <= 1000,
-            self.year,
-            self.min_player_count >=1,
-            self.max_player_count,
+            1 <= self.year <= 2100,
+            1 <= self.min_player_count <=100,
+            1 <= self.max_player_count <= 100,
             self.min_player_count <= self.max_player_count,
-            self.playtime >= 1,
+            1 <= self.playtime <= 10000,
         ])
 
 def add_game(game, user_id):
