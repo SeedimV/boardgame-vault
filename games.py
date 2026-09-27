@@ -14,14 +14,32 @@ class GameData:
 
     @classmethod
     def from_form(cls, form):
+
+        def _to_int(value, default = 0):
+            try:
+                return int(value)
+            except (ValueError, TypeError):
+                return default
+
         return cls(
             title=form.get("title", "").strip(),
             description=form.get("description", "").strip(),
-            year=int(form.get("year", 0)),
-            min_player_count=int(form.get("min_player_count", 0)),
-            max_player_count=int(form.get("max_player_count", 0)),
-            playtime=int(form.get("playtime", 0))
+            year=_to_int(form.get("year")),
+            min_player_count=_to_int(form.get("min_player_count")),
+            max_player_count=_to_int(form.get("max_player_count")),
+            playtime=_to_int(form.get("playtime"))
         )
+
+    def validate(self):
+        return all([
+            self.title and len(self.title) <= 50,
+            self.description and len(self.description) <= 1000,
+            self.year,
+            self.min_player_count >=1,
+            self.max_player_count,
+            self.min_player_count <= self.max_player_count,
+            self.playtime >= 1,
+        ])
 
 def add_game(game, user_id):
     sql = """INSERT INTO games
