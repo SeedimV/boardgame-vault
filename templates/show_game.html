@@ -1,38 +1,32 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ game.title }} | Board Game Vault</title>
-</head>
+{% block title %}{{ game.title }} | {% endblock %}
 
-<body>
-  <h1>{{ game.title }}</h1>
+{% block content %}
+<h2>{{ game.title }}</h2>
 
-  {% if session.user_id == game.user_id %}
-  <p>
-    <a href="/edit_game/{{ game.id }}">Edit</a>
-    <a href="/remove_game/{{ game.id }}">Delete</a>
-  </p>
-  {% endif %}
-  <p>
-    {{ game.description }}
-  </p>
-  <p>
-    Year: {{ game.year }}
-  </p>
-  <p>
-    Players: {{ game.min_player_count }}-{{ game.max_player_count }}
-  </p>
-  <p>
-    Average play time: {{ game.playtime }} minutes
-  </p>
-  <p>
-    Game added by: {{ game.username }}
-  </p>
-  <p>
-    <a href="/">Return</a>
-  </p>
-
-</body>
-
-</html>
+{% if session.user_id == game.user_id %}
+<p>
+  <a href="/edit_game/{{ game.id }}">Edit</a>
+  <a href="/remove_game/{{ game.id }}">Delete</a>
+</p>
+{% endif %}
+<p>
+  {{ game.description }}
+</p>
+<p>
+  Year: {{ game.year }}
+</p>
+<p>
+  Players: {{ game.min_player_count }}-{{ game.max_player_count }}
+</p>
+<p>
+  Average play time: {{ game.playtime }} minutes
+</p>
+<p>
+  Game added by: {{ game.username }}
+</p>
+<p>
+  <a href="/">Return</a>
+</p>
+{% endblock %}

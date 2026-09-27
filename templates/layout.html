@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block title %}{% endblock %}Board Game Vault</title>
+</head>
+
+<body>
+  <div class="header">
+    <h1>Board Game Vault</h1>
+  </div>
+
+  <div class="nav">
+    {% if session.user_id %}
+    <p>
+      You are logged in as {{session.username}}.
+    </p>
+    {% endif %}
+
+    <p>
+      <a href="/">Front page</a>
+      <a href="/find_game">Search games</a>
+      {% if session.user_id %}
+      <a href="/new_game">Add new game</a>
+      <a href="/logout">Log out</a>
+      {% else %}
+      <a href="/login">Log in</a>
+      <a href="/register">Register</a>
+      {% endif %}
+    </p>
+  </div>
+
+  {% for message in get_flashed_messages() %}
+  <div class="info">
+    {{ message }}
+  </div>
+  {% endfor %}
+
+  {% block content %}{% endblock %}
+</body>
+
+</html>

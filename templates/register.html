@@ -1,26 +1,22 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Register | Board Game Vault</title>
-</head>
+{% block title %}Register | {% endblock %}
 
-<body>
-  <form action="/create" method="post">
-    <p>
-      Username: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Password :<br />
-      <input type="password" name="password1" />
-    </p>
-    <p>
-      Retype password: <br />
-      <input type="password" name="password2" />
-    </p>
-    <input type="submit" value="Register" />
-  </form>
-</body>
-
-</html>
+{% block content %}
+<h2>Register</h2>
+<form action="/create" method="post">
+  <p>
+    Username: <br />
+    <input type="text" name="username" />
+  </p>
+  <p>
+    Password :<br />
+    <input type="password" name="password1" />
+  </p>
+  <p>
+    Retype password: <br />
+    <input type="password" name="password2" />
+  </p>
+  <input type="submit" value="Register" />
+</form>
+{% endblock %}

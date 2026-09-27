@@ -1,43 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Board Game Vault</title>
-</head>
+{% block title %}{% endblock %}
 
-<body>
-  {% if session.username %}
-  <p>
-    You are logged in as {{session.username}} with an id {{ session.user_id }}.
-  </p>
+{% block content %}
+<h2>Games</h2>
 
-  <p>
-    <a href="/logout">Log out</a>
-  </p>
 
-  <p>
-    <a href="/new_game">Add new game</a>
-    <a href="/find_game">Search games</a>
-  </p>
-
-  {% else %}
-  <p>
-    <a href="/login">Log in</a>
-    <a href="/register">Register</a>
-  </p>
-  <p>
-    <a href="/find_game">Search games</a>
-  </p>
-  {% endif %}
-
-  <h2>Games</h2>
-
-  <ul>
-    {% for game in games %}
-    <li><a href="/game/{{ game.id }}">{{ game.title }}</a></li>
-    {% endfor %}
-  </ul>
-  
-</body>
-
-</html>
+<ul>
+  {% for game in games %}
+  <li><a href="/game/{{ game.id }}">{{ game.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

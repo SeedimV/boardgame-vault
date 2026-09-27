@@ -1,32 +1,27 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Search | Board Game Vault</title>
-</head>
+{% block title %}Search | {% endblock %}
 
-<body>
-  <h1>Search Game</h1>
-  <form action="/find_game" method="get">
-    <p>
-      Search: <input type="text" name="query" value="{{ query }}" />
-    </p>
-    <input type="submit" value="Send">
-  </form>
+{% block content %}
+<h2>Search Games</h2>
 
+<form action="/find_game" method="get">
   <p>
-    <a href="/">Return</a>
+    Search: <input type="text" name="query" value="{{ query }}" />
   </p>
+  <input type="submit" value="Send">
+</form>
 
-  {% if query %}
-  <h2>Results</h2>
-  <ul>
-    {% for game in results %}
-    <li><a href="/game/{{game.id}}">{{ game.title }}</a></li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+<p>
+  <a href="/">Return</a>
+</p>
 
-</body>
-
-</html>
+{% if query %}
+<h2>Results</h2>
+<ul>
+  {% for game in results %}
+  <li><a href="/game/{{game.id}}">{{ game.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

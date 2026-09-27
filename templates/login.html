@@ -1,31 +1,18 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Log in | Board Game Vault</title>
-</head>
+{% block title %}Log in | {% endblock %}
 
-<body>
-  {% if session.username %}
+{% block content %}
+<h2>Log in</h2>
+<form action="/login" method="post">
   <p>
-    You are logged in as {{ session.username }}
+    Username: <br />
+    <input type="text" name="username" />
   </p>
   <p>
-    <a href="/logout">Log out</a>
+    Password: <br />
+    <input type="password" name="password" />
   </p>
-  {% else %}
-  <form action="/login" method="post">
-    <p>
-      Username: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Password: <br />
-      <input type="password" name="password" />
-    </p>
-    <input type="submit" value="Log in" />
-  </form>
-  {% endif %}
-</body>
-
-</html>
+  <input type="submit" value="Log in" />
+</form>
+{% endblock %}

@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Delete Game | Board Game Vault</title>
-</head>
+{% block title %}Delete Game | {% endblock %}
 
-<body>
-  <h1>Delete Game</h1>
-  <p>Game: {{ game.title }}</p>
-  <p>Are you sure you want to delete this game entry?</p>
-  <form action="/remove_game/{{ game.id }}" method="post">
-    <input type="submit" name="remove" value="Delete" />
-    <input type="submit" name="back" value="Cancel" />
-  </form>
-</body>
-
-</html>
+{% block content %}
+<h2>Delete Game</h2>
+<p>Game: {{ game.title }}</p>
+<p>Are you sure you want to delete this game entry?</p>
+<form action="/remove_game/{{ game.id }}" method="post">
+  <input type="submit" name="remove" value="Delete" />
+  <input type="submit" name="back" value="Cancel" />
+</form>
+{% endblock %}
