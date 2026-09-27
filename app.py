@@ -123,6 +123,15 @@ def create():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+
+    if not 3 <= len(username) <= 30:
+        flash("ERROR: Username must be between 3 and 30 characters")
+        return redirect("/register")
+
+    if len(password1) < 8:
+        flash("ERROR: Password must be at least 8 characters long.")
+        return redirect("/register")
+
     if password1 != password2:
         flash("ERROR: Passwords do not match")
         return redirect("/register")
