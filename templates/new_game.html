@@ -6,28 +6,28 @@
 <h2>New Game</h2>
 <form action="/create_game" method="post">
   <p>
-    Title: <br />
-    <input type="text" name="title" />
+    <label for="title">Title:</label> <br />
+    <input type="text" name="title" id="title" maxlength="50" required />
   </p>
   <p>
-    Description: <br />
-    <textarea name="description" rows="8" cols="60"></textarea>
+    <label for="description">Description:</label> <br />
+    <textarea id="description" name="description" rows="8" cols="60" maxlength="1000"  required></textarea>
   </p>
   <p>
-    Year: <br />
-    <input type="number" name="year" />
+    <label for="year">Year:</label> <br />
+    <input type="number" id="year" name="year" min="1" max="2100" required />
   </p>
   <p>
-    Minimum player amount <br />
-    <input type="number" name="min_player_count" />
+    <label for="min_player_count">Minimum player amount:</label> <br />
+    <input type="number" id="min_player_count" name="min_player_count" min="1" max="100" required />
   </p>
   <p>
-    Maximum player amount <br />
-    <input type="number" name="max_player_count" />
+    <label for="max_player_count">Maximum player amount:</label> <br />
+    <input type="number" id="max_player_count" name="max_player_count" min="1" max="100" required />
   </p>
   <p>
-    Average play time (minutes): <br />
-    <input type="number" name="playtime" />
+    <label for="playtime">Average play time (minutes):</label> <br />
+    <input type="number" id="playtime" name="playtime" min="1" max="10000" required />
   </p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Add new game" />
