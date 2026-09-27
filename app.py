@@ -1,11 +1,10 @@
 from sqlite3 import IntegrityError
 
 from flask import Flask, redirect, render_template, request, session
-from werkzeug.security import check_password_hash, generate_password_hash
 
 import config
-import db
 import games
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -101,12 +100,9 @@ def create():
     password2 = request.form["password2"]
     if password1 != password2:
         return "ERROR: Passwords does not match"
-    
-    password_hash = generate_password_hash(password1)
 
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        users.create_user(username, password1)
     except IntegrityError:
         return "ERROR: username is already in use"
 
@@ -116,20 +112,17 @@ def create():
 def login():
     if request.method == "GET":
         return render_template("login.html")
-    
+
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT id, password_hash FROM users WHERE username = ?"
-    query = db.query(sql, [username])[0]
-    user_id = query["id"]
-
-    if not query or not check_password_hash(query[1], password):
+    user_id = users.check_login(username, password)
+    if user_id:
+        session["user_id"] = user_id
+        session["username"] = username
+        return redirect("/")
+    else:
         return "ERROR: wrong username or password"
-
-    session["user_id"] = user_id
-    session["username"] = username
-    return redirect("/")
 
 @app.route("/logout")
 def logout():
