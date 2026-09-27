@@ -7,7 +7,7 @@ import games
 import users
 
 app = Flask(__name__)
-app.secret_key = config.secret_key
+app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
@@ -62,15 +62,22 @@ def update_game():
     game = games.get_game(game_id)
     if session.get("user_id") != game["user_id"]:
         return "ERROR: Unauthorized", 403
-    
+
     title = request.form["title"]
     description = request.form["description"]
     year = request.form["year"]
     min_player_count = request.form["min_player_count"]
     max_player_count = request.form["max_player_count"]
     playtime = request.form["playtime"]
-    
-    games.update_game(game_id, title, description, year, min_player_count, max_player_count, playtime)
+
+    games.update_game(
+        game_id,
+        title,
+        description,
+        year,
+        min_player_count,
+        max_player_count,
+        playtime)
 
     return redirect(f"/game/{game_id}")
 
@@ -86,8 +93,7 @@ def remove_game(game_id):
     if "remove" in request.form:
         games.remove_game(game_id)
         return redirect("/")
-    else:
-        return redirect(f"/game/{game_id}")
+    return redirect(f"/game/{game_id}")
 
 @app.route("/register")
 def register():
@@ -121,8 +127,7 @@ def login():
         session["user_id"] = user_id
         session["username"] = username
         return redirect("/")
-    else:
-        return "ERROR: wrong username or password"
+    return "ERROR: wrong username or password"
 
 @app.route("/logout")
 def logout():

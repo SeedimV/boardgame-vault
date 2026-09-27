@@ -2,9 +2,12 @@ import db
 
 
 def add_game(title, description, year, min_player_count, max_player_count, playtime, user_id):
-    sql = """INSERT INTO games (title, description, year, min_player_count, max_player_count, playtime, user_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?)"""
-    db.execute(sql, [title, description, year, min_player_count, max_player_count, playtime, user_id])
+    sql = """INSERT INTO games
+            (title, description, year, min_player_count, max_player_count, playtime, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)"""
+    db.execute(
+        sql,
+        [title, description, year, min_player_count, max_player_count, playtime, user_id])
 
 def get_games():
     sql = "SELECT id, title FROM games ORDER BY id DESC"
@@ -35,7 +38,9 @@ def update_game(game_id, title, description, year, min_player_count, max_player_
                 playtime = ?
             WHERE id = ?"""
 
-    db.execute(sql, [title, description, year, min_player_count, max_player_count, playtime, game_id])    
+    db.execute(
+        sql,
+        [title, description, year, min_player_count, max_player_count, playtime, game_id])
 
 def remove_game(game_id):
     sql = "DELETE FROM games WHERE id = ?"
