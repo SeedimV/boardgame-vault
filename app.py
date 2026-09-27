@@ -1,6 +1,6 @@
 from sqlite3 import IntegrityError
 
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, abort, flash, redirect, render_template, request, session
 
 import config
 import games
@@ -37,33 +37,49 @@ def new_game():
 def create_game():
     game = games.GameData.from_form(request.form)
     user_id = session["user_id"]
+
+    if not game.validate():
+        abort(403)
+
     games.add_game(game, user_id)
     return redirect("/")
 
 @app.route("/edit_game/<int:game_id>")
 def edit_game(game_id):
     game = games.get_game(game_id)
-
+    if not game:
+        abort(404)
     if session.get("user_id") != game["user_id"]:
-        return "ERROR: Unauthorized", 403
+        abort(403)
+
     return render_template("edit_game.html", game=game)
 
 @app.route("/update_game", methods=["POST"])
 def update_game():
     game_id = request.form["game_id"]
     game_record = games.get_game(game_id)
-    if session.get("user_id") != game_record["user_id"]:
-        return "ERROR: Unauthorized", 403
+
+    if not game_record:
+        abort(404)
+    if game_record["user_id"] != session["user_id"]:
+        abort(403)
 
     game = games.GameData.from_form(request.form)
+
+    if not game.validate():
+        abort(403)
+
     games.update_game(game_id, game)
     return redirect(f"/game/{game_id}")
 
 @app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
 def remove_game(game_id):
     game = games.get_game(game_id)
-    if session.get("user_id") != game["user_id"]:
-        return "ERROR: Unauthorized", 403
+
+    if not game:
+        abort(404)
+    if game["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("remove_game.html", game=game)
@@ -83,14 +99,16 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "ERROR: Passwords does not match"
+        flash("ERROR: Passwords does not match")
+        return redirect("/register")
 
     try:
         users.create_user(username, password1)
     except IntegrityError:
-        return "ERROR: username is already in use"
+        flash("ERROR: username is already in use")
+        return redirect("/register")
 
-    return "Account registered"
+    return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -105,7 +123,8 @@ def login():
         session["user_id"] = user_id
         session["username"] = username
         return redirect("/")
-    return "ERROR: wrong username or password"
+    flash("ERROR: wrong username or password")
+    return redirect("/login")
 
 @app.route("/logout")
 def logout():
