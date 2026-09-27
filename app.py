@@ -35,16 +35,9 @@ def new_game():
 
 @app.route("/create_game", methods=["POST"])
 def create_game():
-    title = request.form["title"]
-    description = request.form["description"]
-    year = request.form["year"]
-    min_player_count = request.form["min_player_count"]
-    max_player_count = request.form["max_player_count"]
-    playtime = request.form["playtime"]
+    game = games.GameData.from_form(request.form)
     user_id = session["user_id"]
-
-    games.add_game(title, description, year, min_player_count, max_player_count, playtime, user_id)
-
+    games.add_game(game, user_id)
     return redirect("/")
 
 @app.route("/edit_game/<int:game_id>")
@@ -58,27 +51,12 @@ def edit_game(game_id):
 @app.route("/update_game", methods=["POST"])
 def update_game():
     game_id = request.form["game_id"]
-
-    game = games.get_game(game_id)
-    if session.get("user_id") != game["user_id"]:
+    game_record = games.get_game(game_id)
+    if session.get("user_id") != game_record["user_id"]:
         return "ERROR: Unauthorized", 403
 
-    title = request.form["title"]
-    description = request.form["description"]
-    year = request.form["year"]
-    min_player_count = request.form["min_player_count"]
-    max_player_count = request.form["max_player_count"]
-    playtime = request.form["playtime"]
-
-    games.update_game(
-        game_id,
-        title,
-        description,
-        year,
-        min_player_count,
-        max_player_count,
-        playtime)
-
+    game = games.GameData.from_form(request.form)
+    games.update_game(game_id, game)
     return redirect(f"/game/{game_id}")
 
 @app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
