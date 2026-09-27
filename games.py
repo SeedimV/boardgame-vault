@@ -75,7 +75,8 @@ def get_game(game_id):
             FROM games g, users u
             WHERE g.user_id = u.id AND
                 g.id = ?"""
-    return db.query(sql, [game_id])[0]
+    result = db.query(sql, [game_id])
+    return result[0] if result else None
 
 def update_game(game_id, game):
     sql = """UPDATE games SET title = ?,

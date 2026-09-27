@@ -31,6 +31,8 @@ def find_game():
 @app.route("/game/<int:game_id>")
 def show_game(game_id):
     game = games.get_game(game_id)
+    if not game:
+        abort(404)
     return render_template("show_game.html", game=game)
 
 @app.route("/new_game")
