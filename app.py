@@ -1,3 +1,4 @@
+import secrets
 from sqlite3 import IntegrityError
 
 from flask import Flask, abort, flash, redirect, render_template, request, session
@@ -11,6 +12,12 @@ app.secret_key = config.SECRET_KEY
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.route("/")
@@ -43,6 +50,8 @@ def new_game():
 @app.route("/create_game", methods=["POST"])
 def create_game():
     require_login()
+    check_csrf()
+
     game = games.GameData.from_form(request.form)
     user_id = session["user_id"]
 
@@ -66,6 +75,8 @@ def edit_game(game_id):
 @app.route("/update_game", methods=["POST"])
 def update_game():
     require_login()
+    check_csrf()
+
     game_id = request.form["game_id"]
     game_record = games.get_game(game_id)
 
@@ -85,6 +96,7 @@ def update_game():
 @app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
 def remove_game(game_id):
     require_login()
+
     game = games.get_game(game_id)
 
     if not game:
@@ -94,6 +106,8 @@ def remove_game(game_id):
 
     if request.method == "GET":
         return render_template("remove_game.html", game=game)
+
+    check_csrf()
 
     if "remove" in request.form:
         games.remove_game(game_id)
@@ -133,12 +147,12 @@ def login():
     if user_id:
         session["user_id"] = user_id
         session["username"] = username
+        session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
     flash("ERROR: wrong username or password")
     return redirect("/login")
 
 @app.route("/logout")
 def logout():
-    session.pop("username", None)
-    session.pop("user_id", None)
+    session.clear()
     return redirect("/")
