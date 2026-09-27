@@ -137,7 +137,10 @@ def create():
         return redirect("/register")
 
     try:
-        users.create_user(username, password1)
+        user_id = users.create_user(username, password1)
+        session["user_id"] = user_id
+        session["username"] = username
+        session["csrf_token"] = secrets.token_hex(16)
     except IntegrityError:
         flash("ERROR: username is already in use")
         return redirect("/register")
