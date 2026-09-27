@@ -108,7 +108,7 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        flash("ERROR: Passwords does not match")
+        flash("ERROR: Passwords do not match")
         return redirect("/register")
 
     try:
