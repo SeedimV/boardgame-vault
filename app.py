@@ -9,6 +9,10 @@ import users
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
 @app.route("/")
 def index():
     all_games = games.get_games()
@@ -31,10 +35,12 @@ def show_game(game_id):
 
 @app.route("/new_game")
 def new_game():
+    require_login()
     return render_template("new_game.html")
 
 @app.route("/create_game", methods=["POST"])
 def create_game():
+    require_login()
     game = games.GameData.from_form(request.form)
     user_id = session["user_id"]
 
@@ -46,16 +52,18 @@ def create_game():
 
 @app.route("/edit_game/<int:game_id>")
 def edit_game(game_id):
+    require_login()
     game = games.get_game(game_id)
     if not game:
         abort(404)
-    if session.get("user_id") != game["user_id"]:
+    if session["user_id"] != game["user_id"]:
         abort(403)
 
     return render_template("edit_game.html", game=game)
 
 @app.route("/update_game", methods=["POST"])
 def update_game():
+    require_login()
     game_id = request.form["game_id"]
     game_record = games.get_game(game_id)
 
@@ -74,6 +82,7 @@ def update_game():
 
 @app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
 def remove_game(game_id):
+    require_login()
     game = games.get_game(game_id)
 
     if not game:
