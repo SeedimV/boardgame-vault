@@ -50,7 +50,8 @@ def show_game(game_id):
     if not game:
         abort(404)
     classes = games.get_classes(game_id)
-    return render_template("show_game.html", game=game, classes=classes)
+    reviews = games.get_reviews(game_id)
+    return render_template("show_game.html", game=game, classes=classes, reviews=reviews)
 
 @app.route("/new_game")
 def new_game():
@@ -82,6 +83,36 @@ def create_game():
 
     game_id = games.add_game(game, user_id, classes)
     return redirect("/game/" + str(game_id))
+
+@app.route("/create_review", methods=["POST"])
+def create_review():
+    require_login()
+    check_csrf()
+
+    rating = request.form["rating"]
+    description = request.form["description"]
+    game_id = request.form["game_id"]
+    game = games.get_game(game_id)
+
+    if not game:
+            abort(404)
+
+    try:
+        rating = int(request.form.get("rating", 0))
+    except (ValueError, TypeError):
+        abort(400)
+
+    if not (1 <= rating <= 5):
+        abort(400)
+
+    description = request.form.get("description", "").strip()
+    if len(description) > 1000:
+        abort(400)
+
+    user_id = session["user_id"]
+    games.add_review(game_id, user_id, rating, description)
+
+    return redirect(f"/game/{game_id}")
 
 @app.route("/edit_game/<int:game_id>")
 def edit_game(game_id):

@@ -15,6 +15,14 @@ CREATE TABLE games (
     user_id INTEGER REFERENCES users
 );
 
+CREATE TABLE reviews (
+    id INTEGER PRIMARY KEY,
+    game_id INTEGER REFERENCES games,
+    user_id INTEGER REFERENCES users,
+    rating INTEGER,
+    description TEXT
+);
+
 CREATE TABLE classes(
     id INTEGER PRIMARY KEY,
     title TEXT,

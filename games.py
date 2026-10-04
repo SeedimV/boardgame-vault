@@ -79,6 +79,18 @@ def add_game(game, user_id, classes):
 
     return game_id
 
+def add_review(game_id, user_id, rating, description):
+    sql = """INSERT INTO reviews (game_id, user_id, rating, description)
+            VALUES (?, ?, ?, ?)"""
+    db.execute(sql, [game_id, user_id, rating, description])
+
+def get_reviews(game_id):
+    sql = """SELECT r.rating, r.description, u.id user_id, u.username
+            FROM reviews r, users u
+            WHERE r.game_id = ? AND r.user_id = u.id
+            ORDER BY r.id DESC"""
+    return db.query(sql, [game_id])
+
 def get_classes(game_id):
     sql = "SELECT title, value FROM game_classes WHERE game_id = ?"
     return db.query(sql, [game_id])
@@ -133,6 +145,8 @@ def update_game(game_id, game, classes):
         db.execute(sql, [game_id, class_title, class_value])
 
 def remove_game(game_id):
+    sql = "DELETE FROM reviews WHERE game_id = ?"
+    db.execute(sql, [game_id])
     sql = "DELETE FROM game_classes WHERE game_id = ?"
     db.execute(sql, [game_id])
     sql = "DELETE FROM games WHERE id = ?"
