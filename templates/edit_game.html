@@ -29,6 +29,21 @@
     <label for="playtime">Average play time (minutes):</label> <br />
     <input type="number" id="playtime" name="playtime" min="1" max="10000" required value ="{{ game.playtime if game else '' }}" />
   </p>
+  {% for class in all_classes %}
+  <p>
+    <label for="class{{ class }}">{{ class }}</label>: <br />
+    <select name="classes" id="class{{ class }}">
+      <option value="">(Choose)</option>
+      {% for option in all_classes[class] %}
+        {% if classes[class] == option %}
+        <option value="{{ class }}:{{ option }}" selected>{{ option }}</option>
+        {% else %}
+        <option value="{{ class }}:{{ option }}">{{ option }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </p>
+  {% endfor %}
   <input type="hidden" name="game_id" value="{{ game.id }}" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Update" />

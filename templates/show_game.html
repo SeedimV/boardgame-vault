@@ -23,6 +23,13 @@
 <p>
   Average play time: {{ game.playtime }} minutes
 </p>
+{% if classes %}
+<ul>
+  {% for class in classes %}
+  <li>{{ class.title }}: {{ class.value }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 <p>
   Game added by: <a href="/user/{{ game.user_id }}">{{ game.username }}</a>
 </p>
