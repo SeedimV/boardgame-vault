@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ user.username }} | {% endblock %}
+
+{% block content %}
+<h2>{{ user.username }}</h2>
+<p>
+  User has added {{ games | count }} games.
+</p>
+<h3>Games</h3>
+<ul>
+  {% for game in games %}
+  <li><a href="/game/{{ game.id }}">{{ game.title }}</a></li>
+  {% endfor %}
+</ul>
+<p>
+  <a href="/">Return</a>
+</p>
+{% endblock %}
