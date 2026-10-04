@@ -41,10 +41,23 @@ class GameData:
             1 <= self.playtime <= 10000,
         ])
 
-def add_game(game, user_id):
+def get_all_classes():
+    sql = "SELECT title, value FROM classes ORDER BY id"
+    result = db.query(sql)
+
+    classes = {}
+    for title, value in result:
+        classes[title] = []
+    for title, value in result:
+        classes[title].append(value)
+
+    return classes
+
+def add_game(game, user_id, classes):
     sql = """INSERT INTO games
             (title, description, year, min_player_count, max_player_count, playtime, user_id)
             VALUES (?, ?, ?, ?, ?, ?, ?)"""
+
     db.execute(
         sql,
         [
@@ -57,6 +70,18 @@ def add_game(game, user_id):
             user_id,
         ]
     )
+
+    game_id = db.last_insert_id()
+
+    sql = "INSERT INTO game_classes (game_id, title, value) VALUES (?, ? ,?)"
+    for class_title, class_value in classes:
+        db.execute(sql, [game_id, class_title, class_value])
+
+    return game_id
+
+def get_classes(game_id):
+    sql = "SELECT title, value FROM game_classes WHERE game_id = ?"
+    return db.query(sql, [game_id])
 
 def get_games():
     sql = "SELECT id, title FROM games ORDER BY id DESC"
@@ -78,7 +103,7 @@ def get_game(game_id):
     result = db.query(sql, [game_id])
     return result[0] if result else None
 
-def update_game(game_id, game):
+def update_game(game_id, game, classes):
     sql = """UPDATE games SET title = ?,
                 description = ?,
                 year = ?,
@@ -100,7 +125,16 @@ def update_game(game_id, game):
         ]
     )
 
+    sql = "DELETE FROM game_classes WHERE game_id = ?"
+    db.execute(sql, [game_id])
+
+    sql = "INSERT INTO game_classes (game_id, title, value) VALUES (?, ?, ?)"
+    for class_title, class_value in classes:
+        db.execute(sql, [game_id, class_title, class_value])
+
 def remove_game(game_id):
+    sql = "DELETE FROM game_classes WHERE game_id = ?"
+    db.execute(sql, [game_id])
     sql = "DELETE FROM games WHERE id = ?"
     db.execute(sql, [game_id])
 
