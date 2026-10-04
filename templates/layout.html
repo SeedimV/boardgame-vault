@@ -23,6 +23,7 @@
       <a href="/find_game">Search games</a>
       {% if session.user_id %}
       <a href="/new_game">Add new game</a>
+      <a href="/user/{{ session.user_id }}">Profile</a>
       <a href="/logout">Log out</a>
       {% else %}
       <a href="/login">Log in</a>
