@@ -14,3 +14,16 @@ CREATE TABLE games (
     playtime INTEGER,
     user_id INTEGER REFERENCES users
 );
+
+CREATE TABLE classes(
+    id INTEGER PRIMARY KEY,
+    title TEXT,
+    value TEXT
+);
+
+CREATE TABLE game_classes (
+    id INTEGER PRIMARY KEY,
+    game_id INTEGER REFERENCES games,
+    title TEXT,
+    value TEXT
+);
