@@ -19,9 +19,10 @@ Install `Flask`:
 $ pip install flask
 ```
 
-Create the database tables:
+Create the database tables and initialize database:
 ```sh
 $ sqlite3 database.db < schema.sql
+$ sqlite3 database.db < init.sql
 ```
 
 Run the application:
