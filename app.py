@@ -139,15 +139,7 @@ def update_game():
         abort(403)
 
     all_classes = games.get_all_classes()
-    classes = []
-    for entry in request.form.getlist("classes"):
-        if entry:
-            class_title, class_value = entry.split(":", 1)
-            if class_title not in all_classes:
-                abort(403)
-            if class_value not in all_classes[class_title]:
-                abort(403)
-            classes.append((class_title, class_value))
+    classes = games.parse_classes(request.form.getlist("classes"), all_classes)
 
     games.update_game(game_id, game, classes)
     return redirect(f"/game/{game_id}")
