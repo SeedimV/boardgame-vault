@@ -53,6 +53,16 @@ def get_all_classes():
 
     return classes
 
+def parse_classes(entries, all_classes):
+    selected = []
+    for entry in entries:
+        if not entry or ":" not in entry:
+            continue
+        title, value = entry.split(":", 1)
+        if title in all_classes and value in all_classes[title]:
+            selected.append((title, value))
+    return selected
+
 def add_game(game, user_id, classes):
     sql = """INSERT INTO games
             (title, description, year, min_player_count, max_player_count, playtime, user_id)
