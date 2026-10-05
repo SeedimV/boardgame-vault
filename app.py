@@ -102,7 +102,7 @@ def create_review():
 
     return redirect(f"/game/{game_id}")
 
-@app.route("/edit_game/<int:game_id>")
+@app.route("/edit_game/<int:game_id>", methods=["GET", "POST"])
 def edit_game(game_id):
     require_login()
     game = games.get_game(game_id)
@@ -112,37 +112,21 @@ def edit_game(game_id):
         abort(403)
 
     all_classes = games.get_all_classes()
-    classes = {}
-    for my_class in all_classes:
-        classes[my_class] = ""
-    for entry in games.get_classes(game_id):
-        classes[entry["title"]] = entry["value"]
+    game_classes = {entry["title"]: entry["value"] for entry in games.get_classes(game_id)}
 
-    return render_template("edit_game.html", game=game, classes=classes, all_classes=all_classes)
+    if request.method == "POST":
+        check_csrf()
+        game_data = games.GameData.from_form(request.form)
 
-@app.route("/update_game", methods=["POST"])
-def update_game():
-    require_login()
-    check_csrf()
+        if not game_data.validate():
+            flash("Please fill all required fields correctly.")
+            return render_template("edit_game.html", game=game, classes=game_classes, all_classes=all_classes), 400
 
-    game_id = request.form["game_id"]
-    game_record = games.get_game(game_id)
+        classes = games.parse_classes(request.form.getlist("classes"), all_classes)
+        games.update_game(game_id, game_data, classes)
+        return redirect(f"/game/{game_id}")
 
-    if not game_record:
-        abort(404)
-    if game_record["user_id"] != session["user_id"]:
-        abort(403)
-
-    game = games.GameData.from_form(request.form)
-
-    if not game.validate():
-        abort(403)
-
-    all_classes = games.get_all_classes()
-    classes = games.parse_classes(request.form.getlist("classes"), all_classes)
-
-    games.update_game(game_id, game, classes)
-    return redirect(f"/game/{game_id}")
+    return render_template("edit_game.html", game=game, classes=game_classes, all_classes=all_classes)
 
 @app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
 def remove_game(game_id):
