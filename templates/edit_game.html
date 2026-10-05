@@ -5,45 +5,7 @@
 {% block content %}
 <h2>Edit Game</h2>
 <form action="/update_game" method="post">
-  <p>
-    <label for="title">Title:</label> <br />
-    <input type="text" name="title" id="title" maxlength="50" required value ="{{ game.title if game else '' }}" />
-  </p>
-  <p>
-    <label for="description">Description:</label> <br />
-    <textarea id="description" name="description" rows="8" cols="60" maxlength="1000" required>{{ game.description if game else '' }}</textarea>
-  </p>
-  <p>
-    <label for="year">Year:</label> <br />
-    <input type="number" id="year" name="year" min="1" max="2100" required value ="{{ game.year if game else '' }}" />
-  </p>
-  <p>
-    <label for="min_player_count">Minimum player amount:</label> <br />
-    <input type="number" id="min_player_count" name="min_player_count" min="1" max="100" required value ="{{ game.min_player_count if game else '' }}" />
-  </p>
-  <p>
-    <label for="max_player_count">Maximum player amount:</label> <br />
-    <input type="number" id="max_player_count" name="max_player_count" min="1" max="100" required value ="{{ game.max_player_count if game else '' }}" />
-  </p>
-  <p>
-    <label for="playtime">Average play time (minutes):</label> <br />
-    <input type="number" id="playtime" name="playtime" min="1" max="10000" required value ="{{ game.playtime if game else '' }}" />
-  </p>
-  {% for class in all_classes %}
-  <p>
-    <label for="class{{ class }}">{{ class }}</label>: <br />
-    <select name="classes" id="class{{ class }}">
-      <option value="">(Choose)</option>
-      {% for option in all_classes[class] %}
-        {% if classes[class] == option %}
-        <option value="{{ class }}:{{ option }}" selected>{{ option }}</option>
-        {% else %}
-        <option value="{{ class }}:{{ option }}">{{ option }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-  </p>
-  {% endfor %}
+  {% include "game_form.html" %}
   <input type="hidden" name="game_id" value="{{ game.id }}" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Update" />
