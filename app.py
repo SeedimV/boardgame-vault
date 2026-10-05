@@ -173,38 +173,38 @@ def remove_game(game_id):
         return redirect("/")
     return redirect(f"/game/{game_id}")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password1 = request.form.get("password1", "")
+        password2 = request.form.get("password2", "")
+
+        errors = []
+        if not 3 <= len(username) <= 30:
+            errors.append("Username must be between 3 and 30 characters.")
+        if len(password1) < 8:
+            errors.append("Password must be at least 8 characters long.")
+        if password1 != password2:
+            errors.append("Passwords do not match.")
+
+        if errors:
+            for error in errors:
+                flash(error)
+            return render_template("register.html"), 400
+
+        try:
+            user_id = users.create_user(username, password1)
+            session["user_id"] = user_id
+            session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
+            return redirect("/")
+        except IntegrityError:
+            flash("Username is already in use.")
+            return render_template("register.html"), 400
+
     return render_template("register.html")
-
-@app.route("/create", methods=["POST"])
-def create():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-
-    if not 3 <= len(username) <= 30:
-        flash("ERROR: Username must be between 3 and 30 characters")
-        return redirect("/register")
-
-    if len(password1) < 8:
-        flash("ERROR: Password must be at least 8 characters long.")
-        return redirect("/register")
-
-    if password1 != password2:
-        flash("ERROR: Passwords do not match")
-        return redirect("/register")
-
-    try:
-        user_id = users.create_user(username, password1)
-        session["user_id"] = user_id
-        session["username"] = username
-        session["csrf_token"] = secrets.token_hex(16)
-    except IntegrityError:
-        flash("ERROR: username is already in use")
-        return redirect("/register")
-
-    return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

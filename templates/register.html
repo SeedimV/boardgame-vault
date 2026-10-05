@@ -4,18 +4,18 @@
 
 {% block content %}
 <h2>Register</h2>
-<form action="/create" method="post">
+<form action="/register" method="post">
   <p>
-    Username: <br />
-    <input type="text" name="username" />
+    <label for="username">Username</label>: <br />
+    <input type="text" name="username" id="username" minlength="3" maxlength="30" required value="{{ request.form.username or '' }}" />
   </p>
   <p>
-    Password :<br />
-    <input type="password" name="password1" />
+    <label for="password1">Password:</label> <br />
+    <input type="password" name="password1" id="password1" minlength="8" required />
   </p>
   <p>
-    Retype password: <br />
-    <input type="password" name="password2" />
+    <label for="password2">Retype password</label>: <br />
+    <input type="password" name="password2" id="password2" minlength="8" required />
   </p>
   <input type="submit" value="Register" />
 </form>
