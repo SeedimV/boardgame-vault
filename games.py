@@ -47,13 +47,13 @@ def get_all_classes():
 
     classes = {}
     for title, value in result:
-        classes[title] = []
-    for title, value in result:
-        classes[title].append(value)
+        classes.setdefault(title, []).append(value)
 
     return classes
 
-def parse_classes(entries, all_classes):
+def parse_classes(entries, all_classes=None):
+    if all_classes is None:
+        all_classes = get_all_classes()
     selected = []
     for entry in entries:
         if not entry or ":" not in entry:
