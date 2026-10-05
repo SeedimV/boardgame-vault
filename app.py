@@ -53,36 +53,24 @@ def show_game(game_id):
     reviews = games.get_reviews(game_id)
     return render_template("show_game.html", game=game, classes=classes, reviews=reviews)
 
-@app.route("/new_game")
+@app.route("/new_game", methods=["GET", "POST"])
 def new_game():
     require_login()
-    classes = games.get_all_classes()
-    return render_template("new_game.html", classes=classes)
-
-@app.route("/create_game", methods=["POST"])
-def create_game():
-    require_login()
-    check_csrf()
-
-    game = games.GameData.from_form(request.form)
-    user_id = session["user_id"]
-
-    if not game.validate():
-        abort(403)
-
     all_classes = games.get_all_classes()
-    classes = []
-    for entry in request.form.getlist("classes"):
-        if entry:
-            class_title, class_value = entry.split(":", 1)
-            if class_title not in all_classes:
-                abort(403)
-            if class_value not in all_classes[class_title]:
-                abort(403)
-            classes.append((class_title, class_value))
 
-    game_id = games.add_game(game, user_id, classes)
-    return redirect("/game/" + str(game_id))
+    if request.method == "POST":
+        check_csrf()
+        game = games.GameData.from_form(request.form)
+
+        if not game.validate():
+            flash("Please fill all required fields correctly.")
+            return render_template("new_game.html", game=game, classes=all_classes), 400
+        
+        classes = games.parse_classes(request.form.getlist("classes"), all_classes)
+        game_id = games.add_game(game, session["user_id"], classes)
+        return redirect(f"/game/{game_id}")
+
+    return render_template("new_game.html", game=None, classes=all_classes)
 
 @app.route("/create_review", methods=["POST"])
 def create_review():
