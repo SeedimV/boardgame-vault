@@ -155,10 +155,6 @@ def update_game(game_id, game, classes):
         db.execute(sql, [game_id, class_title, class_value])
 
 def remove_game(game_id):
-    sql = "DELETE FROM reviews WHERE game_id = ?"
-    db.execute(sql, [game_id])
-    sql = "DELETE FROM game_classes WHERE game_id = ?"
-    db.execute(sql, [game_id])
     sql = "DELETE FROM games WHERE id = ?"
     db.execute(sql, [game_id])
 

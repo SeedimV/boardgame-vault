@@ -17,8 +17,8 @@ CREATE TABLE games (
 
 CREATE TABLE reviews (
     id INTEGER PRIMARY KEY,
-    game_id INTEGER REFERENCES games,
-    user_id INTEGER REFERENCES users,
+    game_id INTEGER REFERENCES games ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
     rating INTEGER,
     description TEXT
 );
@@ -31,7 +31,7 @@ CREATE TABLE classes(
 
 CREATE TABLE game_classes (
     id INTEGER PRIMARY KEY,
-    game_id INTEGER REFERENCES games,
+    game_id INTEGER REFERENCES games ON DELETE CASCADE,
     title TEXT,
     value TEXT
 );
