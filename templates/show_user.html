@@ -5,7 +5,7 @@
 {% block content %}
 <h2>{{ user.username }}</h2>
 <p>
-  User has added {{ games | count }} games and given {{ reviews | count }} ratings/reviews.
+  User has added {{ total_games }} games and given {{ total_reviews }} ratings/reviews.
 </p>
 
 <h3>Games</h3>
@@ -16,6 +16,13 @@
   <li>No games added yet.</li>
   {% endfor %}
 </ul>
+
+<p>
+  <a href="/user/{{ user.id }}/{{ page - 1 }}?review_page={{ review_page }}">&lt;&lt;</a>
+  Page {{ page }}/{{ page_count }}
+  <a href="/user/{{ user.id }}/{{ page + 1 }}?review_page={{ review_page }}">&gt;&gt;</a>
+</p>
+<hr />
 
 <h3>Reviews</h3>
 <ul>
@@ -30,6 +37,13 @@
   <li>No reviews written yet.</li>
   {% endfor %}
 </ul>
+
+<p>
+  <a href="/user/{{ user.id }}/{{ page }}?review_page={{ review_page - 1 }}">&lt;&lt;</a>
+  Page {{ review_page }}/{{ review_page_count }}
+  <a href="/user/{{ user.id }}/{{ page }}?review_page={{ review_page + 1 }}">&gt;&gt;</a>
+</p>
+<hr />
 
 <p>
   <a href="/">Return</a>

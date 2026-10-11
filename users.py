@@ -8,7 +8,16 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
-def get_games(user_id):
+def get_games_count(user_id):
+    sql = "SELECT COUNT(*) FROM games WHERE user_id = ?"
+    return db.query(sql, [user_id])[0][0]
+
+def get_games(user_id, page=None, page_size=None):
+    if page is not None and page_size is not None:
+        sql = "SELECT id, title FROM games WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?"
+        limit = page_size
+        offset = page_size * (page - 1)
+        return db.query(sql, [user_id, limit, offset])
     sql = "SELECT id, title FROM games WHERE user_id = ? ORDER BY id DESC"
     return db.query(sql, [user_id])
 
@@ -30,10 +39,25 @@ def check_login(username, password):
         return user_id
     return None
 
-def get_reviews(user_id):
+def get_reviews_count(user_id):
+    sql = "SELECT COUNT(*) FROM reviews WHERE user_id = ?"
+    return db.query(sql, [user_id])[0][0]
+
+def get_reviews(user_id, page=None, page_size=None):
+    if page is not None and page_size is not None:
+        sql = """SELECT r.id, r.rating, r.description, g.id AS game_id, g.title AS game_title
+                FROM reviews r
+                JOIN games g ON r.game_id = g.id
+                WHERE r.user_id = ?
+                ORDER BY r.id DESC
+                LIMIT ? OFFSET ?"""
+        limit = page_size
+        offset = page_size * (page - 1)
+        return db.query(sql, [user_id, limit, offset])
     sql = """SELECT r.id, r.rating, r.description, g.id AS game_id, g.title AS game_title
             FROM reviews r
             JOIN games g ON r.game_id = g.id
             WHERE r.user_id = ?
             ORDER BY r.id DESC"""
     return db.query(sql, [user_id])
+

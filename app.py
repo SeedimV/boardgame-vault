@@ -1,7 +1,9 @@
+import math
 import secrets
 from sqlite3 import IntegrityError
 
-from flask import Flask, abort, flash, redirect, render_template, request, session
+from flask import (Flask, abort, flash, redirect, render_template, request,
+                   session)
 
 import config
 import games
@@ -21,9 +23,20 @@ def check_csrf():
         abort(403)
 
 @app.route("/")
-def index():
-    all_games = games.get_games()
-    return render_template("index.html", games=all_games)
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 10
+    total_games = games.game_count()
+    page_count = math.ceil(total_games / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    all_games = games.get_games(page, page_size)
+    return render_template("index.html", page=page, page_count=page_count, games=all_games)
 
 @app.errorhandler(404)
 def page_not_found():
@@ -34,25 +47,73 @@ def forbidden():
     return render_template("403.html"), 403
 
 @app.route("/user/<int:user_id>")
-def show_user(user_id):
+@app.route("/user/<int:user_id>/<int:page>")
+def show_user(user_id, page=1):
     user = users.get_user(user_id)
     if not user:
         abort(404)
 
-    all_games = users.get_games(user_id)
-    user_reviews = users.get_reviews(user_id)
+    page_size = 10
+    total_games = users.get_games_count(user_id)
+    total_reviews = users.get_reviews_count(user_id)
+
+    games_page_count = math.ceil(total_games / page_size)
+    games_page_count = max(games_page_count, 1)
+
+    review_page = request.args.get("review_page", 1, type=int)
+    reviews_page_count = math.ceil(total_reviews / page_size)
+    reviews_page_count = max(reviews_page_count, 1)
+
+    if page < 1:
+        return redirect(f"/user/{user_id}/1?review_page={review_page}")
+    if page > games_page_count:
+        return redirect(f"/user/{user_id}/{games_page_count}?review_page={review_page}")
+
+    if review_page < 1:
+        return redirect(f"/user/{user_id}/{page}?review_page=1")
+    if review_page > reviews_page_count:
+        return redirect(f"/user/{user_id}/{page}?review_page={reviews_page_count}")
+
+    all_games = users.get_games(user_id, page, page_size)
+    user_reviews = users.get_reviews(user_id, review_page, page_size)
     return render_template("show_user.html",
-                           user=user, games=all_games, reviews=user_reviews)
+                           user=user,
+                           games=all_games,
+                           total_games=total_games,
+                           reviews=user_reviews,
+                           total_reviews=total_reviews,
+                           page=page,
+                           page_count=games_page_count,
+                           review_page=review_page,
+                           review_page_count=reviews_page_count)
 
 @app.route("/find_game")
 def find_game():
-    query = request.args.get("query")
+    query = request.args.get("query", "").strip()
+    page = request.args.get("page", 1, type=int)
+
     if query:
-        results = games.find_games(query)
+        page_size = 10
+        total_count = games.find_games_count(query)
+        page_count = math.ceil(total_count / page_size)
+        page_count = max(page_count, 1)
+
+        if page < 1:
+            return redirect(f"/find_game?query={query}&page=1")
+        if page > page_count:
+            return redirect(f"/find_game?query={query}&page={page_count}")
+
+        results = games.find_games(query, page, page_size)
     else:
-        query = ""
+        page = 1
+        page_count = 1
         results = []
-    return render_template("find_game.html", query=query, results=results)
+
+    return render_template("find_game.html",
+                           query=query,
+                           results=results,
+                           page=page,
+                           page_count=page_count)
 
 @app.route("/game/<int:game_id>")
 def show_game(game_id):

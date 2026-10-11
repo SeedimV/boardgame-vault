@@ -124,9 +124,15 @@ def get_classes(game_id):
     sql = "SELECT title, value FROM game_classes WHERE game_id = ?"
     return db.query(sql, [game_id])
 
-def get_games():
-    sql = "SELECT id, title FROM games ORDER BY id DESC"
-    return db.query(sql, [])
+def game_count():
+    sql = "SELECT COUNT(*) FROM games"
+    return db.query(sql)[0][0]
+
+def get_games(page=1, page_size=10):
+    sql = "SELECT id, title FROM games ORDER BY id DESC LIMIT ? OFFSET ?"
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
 
 def get_game(game_id):
     sql = """SELECT g.id,
@@ -177,10 +183,20 @@ def remove_game(game_id):
     sql = "DELETE FROM games WHERE id = ?"
     db.execute(sql, [game_id])
 
-def find_games(query):
+def find_games_count(query):
+    sql = """SELECT COUNT(*)
+            FROM games
+            WHERE title LIKE ? OR description LIKE ?"""
+    like = f"%{query}%"
+    return db.query(sql, [like, like])[0][0]
+
+def find_games(query, page=1, page_size=10):
     sql = """SELECT id, title
             FROM games
             WHERE title LIKE ? OR description LIKE ?
-            ORDER BY id DESC"""
+            ORDER BY id DESC
+            LIMIT ? OFFSET ?"""
     like = f"%{query}%"
-    return db.query(sql, [like, like])
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [like, like, limit, offset])
