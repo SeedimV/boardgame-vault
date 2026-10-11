@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>New Game</h2>
-<form action="/new_game" method="post">
+<form action="/new_game" method="post" novalidate>
   {% include "game_form.html" %}
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Add new game" />

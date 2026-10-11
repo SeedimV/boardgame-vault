@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Edit Game</h2>
-<form action="/edit_game/{{ game.id }}" method="post">
+<form action="/edit_game/{{ game.id }}" method="post" novalidate>
   {% include "game_form.html" %}
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Update" />
