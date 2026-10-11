@@ -23,7 +23,7 @@
   <li>
     <strong><a href="/game/{{ review.game_id }}">{{ review.game_title }}</a></strong> — Rating: {{ review.rating }}/5
     {% if review.description %}
-    <p>{{ review.description }}</p>
+    <p class="multiline">{{ review.description }}</p>
     {% endif %}
   </li>
   {% else %}

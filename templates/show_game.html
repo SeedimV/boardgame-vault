@@ -11,9 +11,7 @@
   <a href="/remove_game/{{ game.id }}">Delete</a>
 </p>
 {% endif %}
-<p>
-  {{ game.description }}
-</p>
+<p class="multiline">{{ game.description }}</p>
 <p>
   Year: {{ game.year }}
 </p>
@@ -36,7 +34,12 @@
 <h3>Reviews</h3>
 <ul>
   {% for review in reviews %}
-  <li>Rating: {{ review.rating }}/5, {{ review.description }}, By: <a href="/user/{{ review.user_id }}">{{ review.username }}</a></li>
+  <li>
+    <strong>Rating: {{ review.rating }}/5</strong> — By: <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
+    {% if review.description %}
+    <p class="multiline">{{ review.description }}</p>
+    {% endif %}
+  </li>
   {% endfor %}
 </ul>
 {% if session.user_id %}

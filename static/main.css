@@ -160,3 +160,9 @@ li {
 a {
   color: var(--primary);
 }
+
+/* --- Multiline Text --- */
+.multiline {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
