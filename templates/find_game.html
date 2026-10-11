@@ -27,9 +27,17 @@
 </ul>
 
 <p>
+  {% if page > 1 %}
   <a href="{{ url_for('find_game', query=query, page=page - 1) }}">&lt;&lt;</a>
+  {% else %}
+  &lt;&lt;
+  {% endif %}
   Page {{ page }}/{{ page_count }}
+  {% if page < page_count %}
   <a href="{{ url_for('find_game', query=query, page=page + 1) }}">&gt;&gt;</a>
+  {% else %}
+  &gt;&gt;
+  {% endif %}
 </p>
 <hr />
 {% endif %}

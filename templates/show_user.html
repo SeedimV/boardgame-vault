@@ -18,9 +18,17 @@
 </ul>
 
 <p>
+  {% if page > 1 %}
   <a href="/user/{{ user.id }}/{{ page - 1 }}?review_page={{ review_page }}">&lt;&lt;</a>
+  {% else %}
+  &lt;&lt;
+  {% endif %}
   Page {{ page }}/{{ page_count }}
+  {% if page < page_count %}
   <a href="/user/{{ user.id }}/{{ page + 1 }}?review_page={{ review_page }}">&gt;&gt;</a>
+  {% else %}
+  &gt;&gt;
+  {% endif %}
 </p>
 <hr />
 
@@ -39,9 +47,17 @@
 </ul>
 
 <p>
+  {% if review_page > 1 %}
   <a href="/user/{{ user.id }}/{{ page }}?review_page={{ review_page - 1 }}">&lt;&lt;</a>
+  {% else %}
+  &lt;&lt;
+  {% endif %}
   Page {{ review_page }}/{{ review_page_count }}
+  {% if review_page < review_page_count %}
   <a href="/user/{{ user.id }}/{{ page }}?review_page={{ review_page + 1 }}">&gt;&gt;</a>
+  {% else %}
+  &gt;&gt;
+  {% endif %}
 </p>
 <hr />
 
