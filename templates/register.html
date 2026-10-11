@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Register</h2>
-<form action="/register" method="post">
+<form action="/register" method="post" novalidate>
   <p>
     <label for="username">Username</label>: <br />
     <input type="text" name="username" id="username" minlength="3" maxlength="30" required value="{{ request.form.username or '' }}" />
