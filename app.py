@@ -79,25 +79,30 @@ def create_review():
     require_login()
     check_csrf()
 
-    rating = request.form["rating"]
-    description = request.form["description"]
-    game_id = request.form["game_id"]
+    game_id = request.form.get("game_id")
     game = games.get_game(game_id)
 
+    errors =  []
+
     if not game:
-            abort(404)
+        flash("Unexpected error, game not found.")
+        return redirect("/")
 
     try:
         rating = int(request.form.get("rating", 0))
+        if not (1 <= rating <= 5):
+            errors.append("Rating must be between 1 and 5.")
     except (ValueError, TypeError):
-        abort(400)
-
-    if not (1 <= rating <= 5):
-        abort(400)
+        errors.append("Invalid rating.")
 
     description = request.form.get("description", "").strip()
     if len(description) > 1000:
-        abort(400)
+        errors.append("Description must be 1000 characters or less.")
+
+    if errors:
+        for error in errors:
+            flash(error)
+        return redirect(f"/game/{game_id}")
 
     user_id = session["user_id"]
     games.add_review(game_id, user_id, rating, description)
