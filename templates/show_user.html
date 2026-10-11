@@ -5,14 +5,32 @@
 {% block content %}
 <h2>{{ user.username }}</h2>
 <p>
-  User has added {{ games | count }} games.
+  User has added {{ games | count }} games and given {{ reviews | count }} ratings/reviews.
 </p>
+
 <h3>Games</h3>
 <ul>
   {% for game in games %}
-  <li><a href="/game/{{ game.id }}">{{ game.title }}</a></li>
+  <li><strong><a href="/game/{{ game.id }}">{{ game.title }}</a></strong></li>
+  {% else %}
+  <li>No games added yet.</li>
   {% endfor %}
 </ul>
+
+<h3>Reviews</h3>
+<ul>
+  {% for review in reviews %}
+  <li>
+    <strong><a href="/game/{{ review.game_id }}">{{ review.game_title }}</a></strong> — Rating: {{ review.rating }}/5
+    {% if review.description %}
+    <p>{{ review.description }}</p>
+    {% endif %}
+  </li>
+  {% else %}
+  <li>No reviews written yet.</li>
+  {% endfor %}
+</ul>
+
 <p>
   <a href="/">Return</a>
 </p>

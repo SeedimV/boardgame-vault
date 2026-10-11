@@ -40,7 +40,9 @@ def show_user(user_id):
         abort(404)
 
     all_games = users.get_games(user_id)
-    return render_template("show_user.html", user=user, games=all_games)
+    user_reviews = users.get_reviews(user_id)
+    return render_template("show_user.html",
+                           user=user, games=all_games, reviews=user_reviews)
 
 @app.route("/find_game")
 def find_game():

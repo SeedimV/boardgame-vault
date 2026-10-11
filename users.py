@@ -29,3 +29,11 @@ def check_login(username, password):
     if check_password_hash(password_hash, password):
         return user_id
     return None
+
+def get_reviews(user_id):
+    sql = """SELECT r.id, r.rating, r.description, g.id AS game_id, g.title AS game_title
+            FROM reviews r
+            JOIN games g ON r.game_id = g.id
+            WHERE r.user_id = ?
+            ORDER BY r.id DESC"""
+    return db.query(sql, [user_id])
