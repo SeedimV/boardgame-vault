@@ -61,9 +61,11 @@ def new_game():
     if request.method == "POST":
         check_csrf()
         game = games.GameData.from_form(request.form)
+        errors = game.validate()
 
-        if not game.validate():
-            flash("Please fill all required fields correctly.")
+        if errors:
+            for error in errors:
+                flash(error)
             return render_template("new_game.html", game=game, classes=all_classes), 400
         
         classes = games.parse_classes(request.form.getlist("classes"), all_classes)
@@ -116,11 +118,15 @@ def edit_game(game_id):
 
     if request.method == "POST":
         check_csrf()
-        game_data = games.GameData.from_form(request.form)
 
-        if not game_data.validate():
-            flash("Please fill all required fields correctly.")
-            return render_template("edit_game.html", game=game, classes=game_classes, all_classes=all_classes), 400
+        game_data = games.GameData.from_form(request.form)
+        game_data.id = game_id
+        errors = game_data.validate()
+
+        if errors:
+            for error in errors:
+                flash(error)
+            return render_template("edit_game.html", game=game_data, classes=game_classes, all_classes=all_classes), 400
 
         classes = games.parse_classes(request.form.getlist("classes"), all_classes)
         games.update_game(game_id, game_data, classes)

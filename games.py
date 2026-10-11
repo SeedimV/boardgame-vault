@@ -31,15 +31,34 @@ class GameData:
         )
 
     def validate(self):
-        return all([
-            self.title and len(self.title) <= 50,
-            self.description and len(self.description) <= 1000,
-            1 <= self.year <= 2100,
-            1 <= self.min_player_count <=100,
-            1 <= self.max_player_count <= 100,
-            self.min_player_count <= self.max_player_count,
-            1 <= self.playtime <= 10000,
-        ])
+        errors = []
+        if not self.title:
+            errors.append("Title is required.")
+        elif len(self.title) > 50:
+            errors.append("Title must be 50 characters or less.")
+
+        if not self.description:
+            errors.append("Description is required.")
+        elif len(self.description) > 1000:
+            errors.append("Description must be 1000 characters or less.")
+
+        if not (1 <= self.year <= 2100):
+            errors.append("Given year is not valid.")
+
+        if not (1 <= self.min_player_count <= 100):
+            errors.append("Minimum players must be between 1 and 100.")
+
+        if not (1 <= self.max_player_count <= 100):
+            errors.append("Maximum players must be between 1 and 100.")
+
+        if 1 <= self.min_player_count <= 100 and 1 <= self.max_player_count <= 100:
+            if self.min_player_count > self.max_player_count:
+                errors.append("Minimum players cannot exceed maximum players.")
+
+        if not (1 <= self.playtime <= 10000):
+            errors.append("Given playtime is not valid.")
+
+        return errors
 
 def get_all_classes():
     sql = "SELECT title, value FROM classes ORDER BY id"
