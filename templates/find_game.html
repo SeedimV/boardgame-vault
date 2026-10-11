@@ -27,9 +27,9 @@
 </ul>
 
 <p>
-  <a href="/find_game?query={{ query }}&page={{ page - 1 }}">&lt;&lt;</a>
+  <a href="{{ url_for('find_game', query=query, page=page - 1) }}">&lt;&lt;</a>
   Page {{ page }}/{{ page_count }}
-  <a href="/find_game?query={{ query }}&page={{ page + 1 }}">&gt;&gt;</a>
+  <a href="{{ url_for('find_game', query=query, page=page + 1) }}">&gt;&gt;</a>
 </p>
 <hr />
 {% endif %}

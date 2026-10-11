@@ -2,8 +2,8 @@ import math
 import secrets
 from sqlite3 import IntegrityError
 
-from flask import (Flask, abort, flash, redirect, render_template, request,
-                   session)
+from flask import Flask, abort, flash, redirect, render_template, request, \
+                   session, url_for
 
 import config
 import games
@@ -99,9 +99,9 @@ def find_game():
         page_count = max(page_count, 1)
 
         if page < 1:
-            return redirect(f"/find_game?query={query}&page=1")
+            return redirect(url_for("find_game", query=query, page=1))
         if page > page_count:
-            return redirect(f"/find_game?query={query}&page={page_count}")
+            return redirect(url_for("find_game", query=query, page=page_count))
 
         results = games.find_games(query, page, page_size)
     else:
