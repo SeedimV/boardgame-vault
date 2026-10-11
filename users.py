@@ -60,4 +60,3 @@ def get_reviews(user_id, page=None, page_size=None):
             WHERE r.user_id = ?
             ORDER BY r.id DESC"""
     return db.query(sql, [user_id])
-
