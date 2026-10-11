@@ -15,7 +15,7 @@ class GameData:
     @classmethod
     def from_form(cls, form):
 
-        def _to_int(value, default = 0):
+        def _to_int(value, default=0):
             try:
                 return int(value)
             except (ValueError, TypeError):

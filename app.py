@@ -92,7 +92,7 @@ def create_review():
     game_id = request.form.get("game_id")
     game = games.get_game(game_id)
 
-    errors =  []
+    errors = []
 
     if not game:
         flash("Unexpected error, game not found.")
