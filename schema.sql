@@ -35,3 +35,8 @@ CREATE TABLE game_classes (
     title TEXT,
     value TEXT
 );
+
+CREATE INDEX idx_games_user_id ON games (user_id);
+CREATE INDEX idx_reviews_game_id ON reviews (game_id);
+CREATE INDEX idx_reviews_user_id ON reviews (user_id);
+CREATE INDEX idx_game_classes_game_id ON game_classes (game_id);
