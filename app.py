@@ -26,11 +26,11 @@ def index():
     return render_template("index.html", games=all_games)
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found():
     return render_template("404.html"), 404
 
 @app.errorhandler(403)
-def forbidden(e):
+def forbidden():
     return render_template("403.html"), 403
 
 @app.route("/user/<int:user_id>")
@@ -38,9 +38,9 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    
-    games = users.get_games(user_id)
-    return render_template("show_user.html", user=user, games=games)
+
+    all_games = users.get_games(user_id)
+    return render_template("show_user.html", user=user, games=all_games)
 
 @app.route("/find_game")
 def find_game():
@@ -75,7 +75,7 @@ def new_game():
             for error in errors:
                 flash(error)
             return render_template("new_game.html", game=game, classes=all_classes), 400
-        
+
         classes = games.parse_classes(request.form.getlist("classes"), all_classes)
         game_id = games.add_game(game, session["user_id"], classes)
         return redirect(f"/game/{game_id}")
@@ -98,7 +98,7 @@ def create_review():
 
     try:
         rating = int(request.form.get("rating", 0))
-        if not (1 <= rating <= 5):
+        if not 1 <= rating <= 5:
             errors.append("Rating must be between 1 and 5.")
     except (ValueError, TypeError):
         errors.append("Invalid rating.")
@@ -140,13 +140,15 @@ def edit_game(game_id):
         if errors:
             for error in errors:
                 flash(error)
-            return render_template("edit_game.html", game=game_data, classes=game_classes, all_classes=all_classes), 400
+            return render_template("edit_game.html", game=game_data,
+                                   classes=game_classes, all_classes=all_classes), 400
 
         classes = games.parse_classes(request.form.getlist("classes"), all_classes)
         games.update_game(game_id, game_data, classes)
         return redirect(f"/game/{game_id}")
 
-    return render_template("edit_game.html", game=game, classes=game_classes, all_classes=all_classes)
+    return render_template("edit_game.html",
+                           game=game, classes=game_classes, all_classes=all_classes)
 
 @app.route("/remove_game/<int:game_id>", methods=["GET", "POST"])
 def remove_game(game_id):

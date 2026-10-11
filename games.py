@@ -42,20 +42,20 @@ class GameData:
         elif len(self.description) > 1000:
             errors.append("Description must be 1000 characters or less.")
 
-        if not (1 <= self.year <= 2100):
+        if not 1 <= self.year <= 2100:
             errors.append("Given year is not valid.")
 
-        if not (1 <= self.min_player_count <= 100):
+        if not 1 <= self.min_player_count <= 100:
             errors.append("Minimum players must be between 1 and 100.")
 
-        if not (1 <= self.max_player_count <= 100):
+        if not 1 <= self.max_player_count <= 100:
             errors.append("Maximum players must be between 1 and 100.")
 
         if 1 <= self.min_player_count <= 100 and 1 <= self.max_player_count <= 100:
             if self.min_player_count > self.max_player_count:
                 errors.append("Minimum players cannot exceed maximum players.")
 
-        if not (1 <= self.playtime <= 10000):
+        if not 1 <= self.playtime <= 10000:
             errors.append("Given playtime is not valid.")
 
         return errors
