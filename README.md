@@ -65,3 +65,6 @@ The indices significantly speed up the game page and user profile page (by appro
 
 Handling large amounts of data is further facilitated by pagination on the front page, search results, and user profile page, which retrieves only 10 items per page at a time.
 
+## Pylint
+
+See [pylint-report.md](pylint-report.md) for the full Pylint report.
