@@ -15,15 +15,23 @@ def require_login():
         abort(403)
 
 def check_csrf():
-    if "csrf_token" not in request.form:
-        abort(403)
-    if request.form["csrf_token"] != session["csrf_token"]:
+    token = request.form.get("csrf_token")
+    session_token = session.get("csrf_token")
+    if not token or token != session_token:
         abort(403)
 
 @app.route("/")
 def index():
     all_games = games.get_games()
     return render_template("index.html", games=all_games)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template("403.html"), 403
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -113,9 +121,10 @@ def create_review():
 def edit_game(game_id):
     require_login()
     game = games.get_game(game_id)
+
     if not game:
         abort(404)
-    if session["user_id"] != game["user_id"]:
+    if game["user_id"] != session["user_id"]:
         abort(403)
 
     all_classes = games.get_all_classes()

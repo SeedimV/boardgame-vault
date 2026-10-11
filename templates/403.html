@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Access Denied | {% endblock %}
+
+{% block content %}
+<div>
+    <h2>403 - Forbidden</h2>
+    <p>You do not have permission to access or modify this resource.</p>
+    {% if not session.user_id %}
+    <p>You might need to <a href="/login">log in</a> first.</p>
+    {% endif %}
+    <p>
+        <a href="/">Return to Front Page</a>
+    </p>
+</div>
+{% endblock%}
